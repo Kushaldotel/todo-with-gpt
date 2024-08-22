@@ -1,0 +1,99 @@
+<!-- todos/templates/todos/todo_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .todo-container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+        .actions a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .actions a:hover {
+            text-decoration: underline;
+        }
+        .actions form {
+            display: inline;
+        }
+        .actions button {
+            background: none;
+            border: none;
+            color: #FF0000;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .actions button:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h1>My ToDos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for todo in todos %}
+                    <tr class="{% if todo.completed %}completed{% endif %}">
+                        <td>{{ todo.title }}</td>
+                        <td>{{ todo.description }}</td>
+                        <td>
+                            {% if todo.completed %}
+                                Completed
+                            {% else %}
+                                Pending
+                            {% endif %}
+                        </td>
+                        <td class="actions">
+                            <a href="{% url 'edit_todo' todo.id %}">Edit</a>
+                            <form method="POST" action="{% url 'delete_todo' todo.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit">Delete</button>
+                            </form>
+                            <a href="{% url 'toggle_complete' todo.id %}">
+                                {% if todo.completed %}Mark as Incomplete{% else %}Mark as Completed{% endif %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
